@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Focus - AI-Powered Localized Study Companion</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay" class="overlay hidden">
+    <div class="spinner-container">
+      <div class="glow-spinner"></div>
+      <p id="loading-msg" data-i18n="loadingText">Deep Focus is thinking... preparing your study material...</p>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <span class="logo-text" data-i18n="appName">Deep Focus</span>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="menu-item active" data-tab="dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span data-i18n="navDashboard">Progress Dashboard</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="simplifier">
+          <i class="fa-solid fa-book-open"></i>
+          <span data-i18n="navSimplifier">Concept Simplifier</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="quiz">
+          <i class="fa-solid fa-square-poll-horizontal"></i>
+          <span data-i18n="navQuiz">Smart Quiz</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="vocab">
+          <i class="fa-solid fa-language"></i>
+          <span data-i18n="navVocab">Vocab Decoder</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="chat">
+          <i class="fa-solid fa-comments"></i>
+          <span data-i18n="navChat">Doubt Solver</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="reviews">
+          <i class="fa-solid fa-star"></i>
+          <span data-i18n="navReviews">User Reviews</span>
+        </a>
+        <a href="#" class="menu-item" data-tab="settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span data-i18n="navSettings">AI Configuration</span>
+        </a>
+      </nav>
+
+      <!-- Student Profile Card -->
+      <div class="profile-card">
+        <div class="avatar">
+          <i class="fa-solid fa-user-graduate"></i>
+        </div>
+        <div class="profile-info">
+          <div class="profile-name">Student (छात्र / மாணவர்)</div>
+          <div class="profile-role">Class 10/12/Competitive</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="header-title-area">
+          <h1 id="main-title" data-i18n="appName">Deep Focus</h1>
+          <p id="main-subtitle" data-i18n="appSubtitle">AI-Powered Localized Study & Productivity Companion</p>
+        </div>
+        
+        <div class="header-controls">
+          <!-- AI Status Indicator -->
+          <div id="ai-status" class="ai-status-pill offline" data-tab-trigger="settings">
+            <span class="status-dot"></span>
+            <span id="ai-status-text" data-i18n="aiStatusDisconnected">AI Engine Offline (Configure Settings)</span>
+          </div>
+
+          <!-- Language Selector -->
+          <div class="lang-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="hi">हिन्दी</button>
+            <button class="lang-btn" data-lang="ta">தமிழ்</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Tab Content Area -->
+      <div class="tab-wrapper">
+        
+        <!-- Tab 0: Progress Dashboard -->
+        <section id="tab-dashboard" class="tab-panel active">
+          <div class="panel-header">
+            <h2 data-i18n="dashboardTitle">Deep Focus Dashboard</h2>
+            <p data-i18n="dashboardDesc">Monitor your study time, manage daily goals, and use the Pomodoro timer to remain highly concentrated.</p>
+          </div>
+
+          <div class="panel-grid">
+            <!-- Left Side: Focus Timer -->
+            <div class="timer-card card">
+              <h3 data-i18n="timerHeader">Pomodoro Focus Timer</h3>
+              <div class="timer-container">
+                <div class="timer-display">
+                  <span id="timer-minutes">25</span>:<span id="timer-seconds">00</span>
+                </div>
+                <div class="timer-state-label" id="timer-state-text" data-i18n="timerStateFocus">Time to Focus!</div>
+                <div class="timer-controls">
+                  <button id="btn-timer-start" class="primary-btn timer-btn">
+                    <i class="fa-solid fa-play"></i> <span data-i18n="btnStart">Start Focus</span>
+                  </button>
+                  <button id="btn-timer-pause" class="secondary-btn timer-btn hidden">
+                    <i class="fa-solid fa-pause"></i> <span data-i18n="btnPause">Pause</span>
+                  </button>
+                  <button id="btn-timer-reset" class="secondary-btn timer-btn">
+                    <i class="fa-solid fa-rotate-right"></i> <span data-i18n="btnReset">Reset</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Stats & Goals -->
+            <div class="stats-goals-container">
+              <!-- Statistics -->
+              <div class="stats-card card mb-4">
+                <h3 data-i18n="statsHeader">Your Activity Statistics</h3>
+                <div class="stats-grid">
+                  <div class="stat-item">
+                    <div class="stat-value" id="stat-sessions">0</div>
+                    <div class="stat-label" data-i18n="statSessions">Focus Sessions Done</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value" id="stat-time">0</div>
+                    <div class="stat-label" data-i18n="statTime">Total Focus Time (Mins)</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value" id="stat-tasks">0 / 3</div>
+                    <div class="stat-label" data-i18n="statTasks">Study Goals Completed</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value" id="stat-quizzes">0</div>
+                    <div class="stat-label" data-i18n="statQuizzes">MCQ Quizzes Evaluated</div>
+                  </div>
+                </div>
+                <div class="progress-bar-container">
+                  <div class="progress-bar" id="study-progress-bar" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Checklist -->
+              <div class="goals-card card">
+                <h3 data-i18n="goalsHeader">Today's Study Checklist</h3>
+                <div class="goals-input-wrapper">
+                  <input type="text" id="goal-input" data-i18n-placeholder="addGoalPlaceholder" placeholder="Add a new study topic/task...">
+                  <button id="btn-add-goal" class="primary-btn">
+                    <i class="fa-solid fa-plus"></i> <span data-i18n="btnAddGoal">Add Task</span>
+                  </button>
+                </div>
+                <ul class="goals-list" id="goals-list-container">
+                  <!-- Goals will be rendered dynamically by JS -->
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 1: Concept Simplifier -->
+        <section id="tab-simplifier" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="simplifierTitle">Academic Concept Simplifier</h2>
+            <p data-i18n="simplifierDesc">Paste complex textbook chapters, definitions, or exam topics in English. Deep Focus will translate it into your local language and explain it using local analogies and simplified bullet points.</p>
+          </div>
+
+          <div class="panel-grid">
+            <div class="input-card card">
+              <label for="simplifier-input" data-i18n="lblTextToSimplify">Paste Study Text (English)</label>
+              <textarea id="simplifier-input" data-i18n-placeholder="placeholderTextToSimplify" placeholder="Paste textbook paragraphs, concepts, or formulas here..."></textarea>
+              <button id="btn-simplify" class="primary-btn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span data-i18n="btnSimplify">Simplify & Translate</span>
+              </button>
+            </div>
+
+            <div class="output-card card">
+              <h3 data-i18n="simplifierResultHeader">Translated & Simplified Notes</h3>
+              <div id="simplifier-result" class="result-box markdown-body">
+                <div class="placeholder-msg">
+                  <i class="fa-solid fa-file-invoice"></i>
+                  <p data-i18n="simplifierNoResults">Paste study material above and click 'Simplify' to see localized notes.</p>
+                </div>
+              </div>
+              <div class="result-actions hidden" id="simplifier-actions">
+                <button class="icon-btn btn-copy" data-target="simplifier-result">
+                  <i class="fa-regular fa-copy"></i>
+                  <span class="btn-text" data-i18n="btnCopy">Copy to Clipboard</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 2: Smart Quiz -->
+        <section id="tab-quiz" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="quizTitle">Interactive Smart Quiz</h2>
+            <p data-i18n="quizDesc">Test your preparation! Enter a topic to generate a customized 3-question MCQ quiz in your chosen language.</p>
+          </div>
+
+          <div class="panel-grid">
+            <div class="input-card card">
+              <div class="form-group">
+                <label for="quiz-topic" data-i18n="lblQuizTopic">Enter Quiz Topic</label>
+                <input type="text" id="quiz-topic" data-i18n-placeholder="placeholderQuizTopic" placeholder="e.g., Photosynthesis, Trigonometry, World War II...">
+              </div>
+
+              <div class="form-group">
+                <label for="quiz-difficulty" data-i18n="lblQuizDifficulty">Select Level</label>
+                <select id="quiz-difficulty">
+                  <option value="easy" data-i18n="optEasy">Easy (School Level)</option>
+                  <option value="medium" selected data-i18n="optMedium">Medium (Board Exam Level)</option>
+                  <option value="hard" data-i18n="optHard">Hard (Competitive Exam Level)</option>
+                </select>
+              </div>
+
+              <button id="btn-generate-quiz" class="primary-btn">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span data-i18n="btnGenerateQuiz">Generate Quiz</span>
+              </button>
+            </div>
+
+            <div class="output-card card">
+              <h3 data-i18n="quizResultHeader">Active Quiz Board</h3>
+              
+              <!-- Quiz Board Container -->
+              <div id="quiz-board" class="quiz-container">
+                <div class="placeholder-msg">
+                  <i class="fa-solid fa-clipboard-question"></i>
+                  <p data-i18n="quizNoResults">Enter a topic above and generate a quiz to test your knowledge.</p>
+                </div>
+              </div>
+
+              <div id="quiz-actions" class="hidden">
+                <button id="btn-submit-quiz" class="primary-btn">
+                  <span data-i18n="btnSubmitQuiz">Submit Answers</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 3: Vocab Decoder -->
+        <section id="tab-vocab" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="vocabTitle">Formula & Vocab Decoder</h2>
+            <p data-i18n="vocabDesc">Translate and decode complex academic terminology, Greek symbols, or scientific formulas into regional terms and descriptions.</p>
+          </div>
+
+          <div class="panel-grid">
+            <div class="input-card card">
+              <label for="vocab-term" data-i18n="lblVocabTerm">Enter Term or Formula</label>
+              <input type="text" id="vocab-term" data-i18n-placeholder="placeholderVocabTerm" placeholder="e.g., Photosynthesis, E=mc², GDP, Osmosis...">
+              <button id="btn-decode" class="primary-btn">
+                <i class="fa-solid fa-spell-check"></i>
+                <span data-i18n="btnDecode">Decode & Localize</span>
+              </button>
+            </div>
+
+            <div class="output-card card">
+              <h3 data-i18n="vocabResultHeader">Concept breakdown</h3>
+              <div id="vocab-result" class="result-box markdown-body">
+                <div class="placeholder-msg">
+                  <i class="fa-solid fa-book-atlas"></i>
+                  <p data-i18n="vocabNoResults">Enter a term and click 'Decode' to see its meaning and local translation.</p>
+                </div>
+              </div>
+              <div class="result-actions hidden" id="vocab-actions">
+                <button class="icon-btn btn-copy" data-target="vocab-result">
+                  <i class="fa-regular fa-copy"></i>
+                  <span class="btn-text" data-i18n="btnCopy">Copy to Clipboard</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 4: Doubt Solver -->
+        <section id="tab-chat" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="chatTitle">Doubt Solver Chat</h2>
+            <p data-i18n="chatDesc">Stuck on a problem? Ask Deep Focus for help. Get step-by-step mathematical solutions or topic clarifications in your chosen language.</p>
+          </div>
+
+          <div class="chat-container card">
+            <!-- Messages Box -->
+            <div id="chat-messages" class="chat-messages">
+              <div class="message assistant">
+                <div class="message-avatar">
+                  <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="message-content">
+                  <p data-i18n="chatWelcome">Hello! I am your personal study assistant. Ask me any study question or doubt, and I will solve it step-by-step for you in your language!</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="chat-input-bar">
+              <input type="text" id="chat-input" data-i18n-placeholder="chatPlaceholder" placeholder="Ask a doubt (e.g., 'Explain the difference between speed and velocity with examples')...">
+              <button id="btn-send-chat" class="send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span data-i18n="btnSend">Send</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 5: User Reviews -->
+        <section id="tab-reviews" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="reviewsTitle">Student & Educator Reviews</h2>
+            <p data-i18n="reviewsDesc">See what other regional and English medium students say about using Deep Focus for their exam preparation.</p>
+          </div>
+
+          <div class="panel-grid-reviews">
+            <!-- Left Side: Sentiment summary & Write a Review form -->
+            <div class="reviews-sidebar-container">
+              <!-- Summary Card -->
+              <div class="summary-card card mb-4">
+                <div class="rating-summary-row">
+                  <div class="big-rating">4.8</div>
+                  <div class="rating-stars-column">
+                    <div class="stars-row">
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star"></i>
+                      <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <div class="rating-subtext">
+                      <span id="reviews-count-text">25</span> <span data-i18n="totalReviewsText">Reviews</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Star bars -->
+                <div class="star-bars-container">
+                  <div class="star-bar-row">
+                    <span>5 ★</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 84%;"></div></div>
+                    <span>84%</span>
+                  </div>
+                  <div class="star-bar-row">
+                    <span>4 ★</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 12%;"></div></div>
+                    <span>12%</span>
+                  </div>
+                  <div class="star-bar-row">
+                    <span>3 ★</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 4%;"></div></div>
+                    <span>4%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add Review Form -->
+              <div class="add-review-card card">
+                <h3 data-i18n="addReviewHeader">Write a Review</h3>
+                <div class="form-group">
+                  <label for="rev-name" data-i18n="lblRevName">Full Name</label>
+                  <input type="text" id="rev-name" placeholder="Amit Sharma">
+                </div>
+                <div class="form-group">
+                  <label for="rev-role" data-i18n="lblRevRole">Academic Role (e.g. Class 12, JEE Aspirant)</label>
+                  <input type="text" id="rev-role" placeholder="JEE Aspirant, Delhi">
+                </div>
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="rev-rating" data-i18n="lblRevRating">Rating</label>
+                    <select id="rev-rating">
+                      <option value="5">5 Stars</option>
+                      <option value="4">4 Stars</option>
+                      <option value="3">3 Stars</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="rev-lang" data-i18n="lblRevLang">Review Language</label>
+                    <select id="rev-lang">
+                      <option value="en">English</option>
+                      <option value="hi">Hindi (हिन्दी)</option>
+                      <option value="ta">Tamil (தமிழ்)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="rev-comment" data-i18n="lblRevComment">Write your review here...</label>
+                  <textarea id="rev-comment" style="height: 100px;" placeholder="How did Deep Focus help you study?..."></textarea>
+                </div>
+                <button id="btn-submit-review" class="primary-btn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span data-i18n="btnSubmitReview">Publish Review</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right Side: Reviews Feed -->
+            <div class="reviews-feed-container card">
+              <div class="feed-filters">
+                <div class="filter-group">
+                  <label for="filter-lang" data-i18n="filterLabelLang">Filter by Language</label>
+                  <select id="filter-lang">
+                    <option value="all" data-i18n="optAll">All</option>
+                    <option value="en" data-i18n="optLangEn">English</option>
+                    <option value="hi" data-i18n="optLangHi">Hindi (हिन्दी)</option>
+                    <option value="ta" data-i18n="optLangTa">Tamil (தமிழ்)</option>
+                  </select>
+                </div>
+                <div class="filter-group">
+                  <label for="filter-rating" data-i18n="filterLabelRating">Filter by Rating</label>
+                  <select id="filter-rating">
+                    <option value="all" data-i18n="optAll">All</option>
+                    <option value="5">5 ★</option>
+                    <option value="4">4 ★</option>
+                    <option value="3">3 ★</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Reviews Feed list -->
+              <div class="reviews-feed-list" id="reviews-feed-list">
+                <!-- Dynamically rendered reviews cards -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tab 6: AI Settings -->
+        <section id="tab-settings" class="tab-panel">
+          <div class="panel-header">
+            <h2 data-i18n="settingsTitle">AI Model Settings</h2>
+            <p data-i18n="settingsDesc">Configure your LLM provider. Select Ollama for free offline local study assistance or BYOK (Gemini/OpenAI) for advanced cloud reasoning.</p>
+          </div>
+
+          <div class="settings-grid">
+            <div class="settings-card card">
+              
+              <!-- Provider selection -->
+              <div class="form-group">
+                <label for="settings-provider" data-i18n="providerLabel">LLM Provider</label>
+                <select id="settings-provider">
+                  <option value="demo">Demo Mode (Simulated AI - No Setup Required)</option>
+                  <option value="ollama">Local Inference: Ollama (Offline)</option>
+                  <option value="gemini">Bring Your Own Key: Google Gemini</option>
+                  <option value="openai">Bring Your Own Key: OpenAI</option>
+                </select>
+              </div>
+
+              <!-- API Key -->
+              <div class="form-group hidden" id="group-api-key">
+                <div class="label-with-icon">
+                  <label for="settings-api-key" data-i18n="apiKeyLabel">API Key</label>
+                  <span class="info-tooltip" title="Your API key is saved directly in your browser's local storage.">
+                    <i class="fa-regular fa-circle-question"></i>
+                  </span>
+                </div>
+                <div class="password-input-wrapper">
+                  <input type="password" id="settings-api-key" data-i18n-placeholder="apiKeyPlaceholder" placeholder="Paste your API Key here...">
+                  <button type="button" id="btn-toggle-key" class="toggle-password-btn">
+                    <i class="fa-regular fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Model Name -->
+              <div class="form-group">
+                <label for="settings-model" data-i18n="modelLabel">Model Name</label>
+                <input type="text" id="settings-model" data-i18n-placeholder="modelPlaceholder" placeholder="e.g., gemma2, gpt-4o-mini, gemini-1.5-flash">
+              </div>
+
+              <!-- Ollama Endpoint -->
+              <div class="form-group hidden" id="group-ollama-endpoint">
+                <label for="settings-endpoint" data-i18n="endpointLabel">Ollama Endpoint URL</label>
+                <input type="text" id="settings-endpoint" data-i18n-placeholder="endpointPlaceholder" placeholder="e.g., http://localhost:11434">
+                <p class="field-hint" data-i18n="ollamaNotice">Note: For Ollama, start the server in your terminal with CORS enabled: 'set OLLAMA_ORIGINS=*' and then 'ollama serve'.</p>
+              </div>
+
+              <div class="settings-buttons">
+                <button id="btn-test-connection" class="secondary-btn">
+                  <i class="fa-solid fa-plug"></i>
+                  <span data-i18n="testConnBtn">Test Connection</span>
+                </button>
+                <button id="btn-save-settings" class="primary-btn">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span data-i18n="saveSettingsBtn">Save Configurations</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Testing console -->
+            <div class="settings-console card">
+              <h3>System Diagnostics</h3>
+              <div id="diagnostics-console" class="console-box">
+                <div class="console-line system">&gt; Ready for diagnostic tests...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- App Script Modules -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
